@@ -1,0 +1,38 @@
+name: Blog Automation — Daily Post
+
+on:
+  schedule:
+    - cron: "0 4 * * *"   # Runs every day at 9:30 AM IST (4:00 AM UTC)
+  workflow_dispatch:        # Also allows you to trigger it manually from GitHub
+
+jobs:
+  publish-post:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: 🚀 Run Blog Automation
+        env:
+          GEMINI_API_KEY:           ${{ secrets.GEMINI_API_KEY }}
+          BLOGGER_BLOG_ID:          ${{ secrets.BLOGGER_BLOG_ID }}
+          BLOGGER_TOKEN_B64:        ${{ secrets.BLOGGER_TOKEN_B64 }}
+          TWITTER_API_KEY:          ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET:       ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN:     ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_SECRET:    ${{ secrets.TWITTER_ACCESS_SECRET }}
+          FACEBOOK_PAGE_ID:         ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_ACCESS_TOKEN:    ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID:     ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+          LINKEDIN_ACCESS_TOKEN:    ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_URN:             ${{ secrets.LINKEDIN_URN }}
+        run: python main.py
